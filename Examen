@@ -1,0 +1,31 @@
+DECLARE
+inicio integer;
+valor integer;
+BEGIN
+random
+inicio:=1500;
+FOR i IN 1..300 Loop
+guardar_trabajador(i,i,nombre, puesto)
+guardar_honorarios(i,i,inicio,null,null,null);
+inicio:=inicio+100;
+end Loop;
+end;
+/
+
+CREATE OR REPLACE PROCEDURE reporte
+AS 
+my_iva integer; 
+my_ret_iva integer; 
+my_isr integer; 
+my_total_pagar integer; 
+CURSOR Cursor_honorarios IS SELECT * FROM honorarios FOR UPDATE; 
+BEGIN 
+FOR h IN Cursor_honorarios loop
+my_iva:= h.subtotal*0.16; 
+my_ret_iva:= h.iva/3; 
+my_isr:= h.subtotal*0.10; 
+my_total_pagar:=h.subtotal+h.ret_iva-h.iva-h.isr; 
+UPDATE honorario SET iva=my_iva, ret_iva= my_ret_iva, isr= my_isr, total_pagar=my_total_pagar WHERE CURRENT OF Cursor_honorarios; 
+END loop; 
+END;
+/
