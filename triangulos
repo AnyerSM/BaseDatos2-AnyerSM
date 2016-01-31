@@ -1,0 +1,41 @@
+Un tríangulo equilátero tiene sus tres lados iguales, por tanto, la condición quedaría así:
+
+“si el lado 1 es igual al lado 2 y el lado 2 es igual al lado 3, entonces es equilátero”
+
+Un tríangulo isósceles tiene solo dos lados iguales, por tanto, la condición quedaría así:
+
+“si el lado 1 es igual al lado 2 y el lado 2 es diferente al lado 3, o
+el lado 2 es igual al lado 3 y el lado 3 es diferente al lado 1, o
+el lado 3 es igual al lado 1 y el lado 1 es diferente al lado 2 entonces es isósceles”
+
+Un tríangulo escaleno tiene sus tres lados diferentes, por tanto, la condición quedaría así:
+
+“si el lado 1 es diferente al lado 2 y el lado 2 es diferente al lado 3 y el lado 3 es diferente al lado 1, entonces es escaleno”
+
+Pero vamos a lo bueno. El programa completo en C++, sería así:
+
+#include<stdio.h>
+#include<conio.h>
+int main()
+{
+  //Declaracion de variables
+  int lado1=0,lado2=0,lado3=0;
+
+  //Pedir los datos
+  printf("TIPOS DE TRIANGULOS");
+  printf("nIntroduce el lado 1: ");scanf("%i",&lado1);
+  printf("nIntroduce el lado 2: ");scanf("%i",&lado2);
+  printf("nIntroduce el lado 3: ");scanf("%i",&lado3);
+
+  //Hacer comparaciones
+  if(lado1==lado2 && lado2==lado3)
+  { printf("ntEs equilatero"); }
+  if(lado1==lado2 && lado2!=lado3 || lado2==lado3 && lado3!=lado1 || lado3==lado1 && lado1!=lado2)
+  { printf("ntEs isosceles"); }
+  if(lado1!=lado2 && lado2!=lado3 && lado3!=lado1)
+  { printf("ntEs escaleno"); }
+
+  //Pausa
+  getch();
+}
+Aprovecho para explicarles un detalle más. n (alt+92 n) dentro de un printf(); indica un salto de línea, y t (alt+92 t) indica una sangría o tabulado o algo de espacio.
