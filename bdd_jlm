@@ -1,0 +1,412 @@
+clonar el proyecto
+https://github.com/daton/base-datos
+
+----->operaciones básicas
+casos: 
+-insert
+-update     similares
+-borrar
+
+buscar todos
+buscar por id
+
+----->tabla producto---->oracle
+
+------>entidad producto
+reflejo de la tabla producto
+
+
+----->persistencia producto
+engloba las 5 operaciones basicas
+
+4buscar Producto
+
+---->servletBuscarProducto
+genera Json de producto
+
+---->pagina web
+
+
+########################
+navegador web solo interpresta javascript
+
+una apps distribuida 
+produce info q puede ser interpretada en distitas plataformas
+tipos de clientes
+web browser
+desktop(se instala)
+cualquier app en movil
+
+JSON
+#######################################################################
+
+create table Paciente(
+Id_paciente INTEGER,
+Id_empleado INTEGER,
+NSS varchar(20),
+Nombre varchar2(120),
+Edad INTEGER,
+Fecha_ingreso date,
+Informe_interno VARCHAR2(500),ñ
+Informe_familiar VARCHAR2(250),
+Salida_paciente date,
+constraint pk_Id_paciente primary key(Id_paciente),
+constraint fk_Id_empleado foreign key(Id_empleado) references Perfil_Usuario(Id_empleado));
+
+create table Diagnóstico(
+Id_diagnóstico integer,
+Id_paciente integer,
+Id_empleado INTEGER,
+Padecimiento VARCHAR2(150),
+Tratamiento VARCHAR2(200),
+Seguimiento VARCHAR2(150),
+constraint pk_Id_diagnóstico primary key(Id_diagnóstico),
+constraint fk_Id_paciente foreign key(Id_paciente) references Paciente(Id_paciente),
+constraint fk1_Id_empleado foreign key(Id_empleado) references Perfil_Usuario(Id_empleado));
+
+create table Perfil_Usuario(
+Id_empleado INTEGER,
+Nombre VARCHAR2(120),
+Cargo VARCHAR2(120),
+Turno varchar(20),
+constraint pk_Id_empleado primary key(Id_empleado));
+
+create table Responsable(
+Id_doctor integer,
+Nombre VARCHAR2(120),
+Especialidad VARCHAR2(120),
+Área varchar2(30),
+constraint pk_Id_doctor primary key(Id_doctor));
+
+create table Intervenciones(
+Id_intervención INTEGER,
+Id_paciente INTEGER,
+Intervención VARCHAR2(50),
+Cédula_Doctor VARCHAR2(50),
+Síntomas_observados VARCHAR2(120),
+Tratamiento_prescrito VARCHAR2(120),
+constraint pk_Id_intevención primary key(Id_intervención),
+constraint fk1_Id_paciente foreign key(Id_paciente) references Paciente(Id_paciente));
+
+create sequence sec_paciente
+start with 1
+increment by 1
+nomaxvalue;
+
+create sequence sec_diagnóstico
+start with 1
+increment by 1
+nomaxvalue;
+
+create sequence sec_perfil_usuario
+start with 1
+increment by 1
+nomaxvalue;
+
+create sequence sec_responsable
+start with 1
+increment by 1
+nomaxvalue;
+
+create sequence sec_intervenciones
+start with 1
+increment by 1
+nomaxvalue;
+
+create or replace PROCEDURE GUARDAR_paciente(
+my_Id_paciente OUT INTEGER,
+my_Id_empleado out INTEGER,
+my_NSS in varchar2,
+my_Nombre in varchar2,
+my_Edad in INTEGER,
+my_Fecha_ingreso in date,
+my_Informe_interno in VARCHAR2,
+my_Informe_familiar in VARCHAR2,
+my_Salida_paciente in date)
+AS
+BEGIN 
+SELECT SEC_paciente.NEXTVAL INTO MY_ID_paciente FROM DUAL;
+INSERT INTO Paciente VALUES(
+my_Id_paciente,
+my_Id_empleado,
+my_NSS,
+my_Nombre,
+my_Edad,
+my_Fecha_ingreso,
+my_Informe_interno,
+my_Informe_familiar,
+my_Salida_paciente);
+END;
+/
+
+create or replace procedure guardar_diagnóstico(
+my_Id_diagnóstico out integer,
+my_Id_paciente out integer,
+my_Id_empleado out INTEGER,
+my_Padecimiento in VARCHAR2,
+my_Tratamiento in VARCHAR2,
+my_Seguimiento in VARCHAR2)
+as
+begin
+select sec_diagnóstico.nextval into my_Id_diagnóstico from dual;
+insert into Diagnóstico values(
+my_Id_diagnóstico,
+my_Id_paciente,
+my_Id_empleado,
+my_Padecimiento,
+my_Tratamiento,
+my_Seguimiento);
+END;
+/
+
+create or replace procedure guardar_Perfil_Usuario(
+my_Id_empleado out INTEGER,
+my_Nombre in VARCHAR2,
+my_Cargo in VARCHAR2,
+my_Turno in varchar2)
+as
+begin
+select sec_perfil_usuario.nextval into my_id_empleado from dual;
+insert into Perfil_Usuario values(
+my_Id_empleado,
+my_Nombre,
+my_Cargo,
+my_Turno);
+END;
+/
+
+#################################################################################
+CREATE TABLE PRODUCTO (ID_PRODUCTO INTEGER, 
+DESCRIPCION VARCHAR2(120),  MARCA VARCHAR2(120), 
+CATEGORIA VARCHAR2(80), PRECIO FLOAT,
+CONSTRAINT PK_ID_PRODUCTO PRIMARY KEY (ID_PRODUCTO));
+
+select * from producto;
+
+
+CREATE TABLE FECHA (ID_FECHA INTEGER, DIA INTEGER,  MES INTEGER, 
+ANIO INTEGER,
+CONSTRAINT PK1_ID_FECHA PRIMARY KEY (ID_FECHA));
+
+CREATE TABLE ALMACEN (ID_ALMACEN INTEGER, NUMERO INTEGER,  
+NOMBRE VARCHAR2(120), ESTADO VARCHAR2(80), MUNICIPIO VARCHAR2(80),
+CONSTRAINT PK2_ID_ALAMACEN PRIMARY KEY (ID_ALMACEN));
+
+CREATE TABLE CAJERO (ID_CAJERO INTEGER, NOMBRE VARCHAR2(80), 
+A_PATERNO VARCHAR2(80), A_MATERNO VARCHAR2(80), SUELDO FLOAT,
+CONSTRAINT PK3_ID_CAJERO PRIMARY KEY (ID_CAJERO));
+
+----CONSTRUIMOS LA TABLA DE HECHOS A PARTIR DE SUS DIMENSIONES Y SUS 
+----HECHOS DEFINIDOS
+
+CREATE TABLE VENTA_ALMACEN_FACT (ID_PRODUCTO INTEGER, ID_FECHA INTEGER,  
+ID_ALMACEN INTEGER, ID_CAJERO INTEGER, NUM_TRANSACCION INTEGER,
+VENTAS_UNIDADES INTEGER,
+CONSTRAINT FK_ID_PRODUCTO FOREIGN KEY (ID_PRODUCTO) REFERENCES PRODUCTO(ID_PRODUCTO),
+CONSTRAINT FK1_ID_FECHA FOREIGN KEY (ID_FECHA) REFERENCES FECHA(ID_FECHA),
+CONSTRAINT FK1_ID_ALMACEN FOREIGN KEY (ID_ALMACEN) REFERENCES ALMACEN(ID_ALMACEN),
+CONSTRAINT FK1_ID_CAJERO FOREIGN KEY (ID_CAJERO) REFERENCES CAJERO(ID_CAJERO));
+
+--ENTREGABLE 4
+
+INSERT INTO PRODUCTO VALUES(1,'GALLETAS MARIAS','GAMESA', 'CEREALES', 34.50 );
+INSERT INTO PRODUCTO VALUES(2,'QUESO COTTAGE','LYNCOTT', 'LACTEOS', 45.20 );
+INSERT INTO PRODUCTO VALUES(3,'DETERGENTE PARA ROMA','ROMA', 'LIMPIEZA',22.20 );
+INSERT INTO PRODUCTO VALUES(4,'CUADERNO PROFESIONAL','SCRIBE', 'PAPELERIA', 38.00 );
+INSERT INTO PRODUCTO VALUES(5,'YOGURT PARA BEBER','YOPLAIT', 'LACTEOS', 12.50 );
+INSERT INTO PRODUCTO VALUES(6,'LIPIADOR FABULOSO','FABULOSO', 'LIMPIEZA', 15.00 );
+INSERT INTO PRODUCTO VALUES(7,'PASTA DE DIENTES','COLGATE', 'HIGIENE', 24.50 );
+INSERT INTO PRODUCTO VALUES(8,'DESODORANTE','AXE', 'HIGIENE', 43.50 );
+INSERT INTO PRODUCTO VALUES(9,'SALSA DE SOYA','KIKOMAN', 'SALSAS', 45.50 );
+INSERT INTO PRODUCTO VALUES(10,'HOJUELAS DE MAIZ', 'KELLOGS', 'CEREALES', 36.20 );
+INSERT INTO PRODUCTO VALUES(11,'LECHE EVAPORADA','CARNATION', 'LACTEOS ', 16.40 );
+
+select * from PRODUCTO;
+
+INSERT INTO FECHA VALUES (1, 1,10,2015);
+INSERT INTO FECHA VALUES (2, 2,10,2015);
+INSERT INTO FECHA VALUES (3, 3,10,2015);
+INSERT INTO FECHA VALUES (4, 4,10,2015);
+INSERT INTO FECHA VALUES (5, 5,10,2015);
+INSERT INTO FECHA VALUES (6, 6,10,2015);
+INSERT INTO FECHA VALUES (7, 7,10,2015);
+INSERT INTO FECHA VALUES (8, 8,10,2015);
+INSERT INTO FECHA VALUES (9, 9,10,2015);
+INSERT INTO FECHA VALUES (10, 10,10,2015);
+INSERT INTO FECHA VALUES (11, 11,10,2015);
+INSERT INTO FECHA VALUES (12,12,10,2015);
+INSERT INTO FECHA VALUES (13, 13,10,2015);
+INSERT INTO FECHA VALUES (14, 14,10,2015);
+INSERT INTO FECHA VALUES (15, 15,10,2015);
+
+select * from FECHA;
+
+
+INSERT INTO ALMACEN VALUES (1,44, 'PLAZA ARAGON','MEXICO','ECATEPEC' );
+INSERT INTO ALMACEN VALUES (2,45, 'LAS AMERICAS','MEXICO','ECATEPEC' );
+INSERT INTO ALMACEN VALUES (3, 46, 'PLAZA ECATEPEC','MEXICO','ECATEPEC' );
+INSERT INTO ALMACEN VALUES (4,47, 'PLAZA COACALCO','MEXICO','COACALCO' );
+INSERT INTO ALMACEN VALUES (5,48, 'CENTRALIA','MEXICO','COACALCO');
+INSERT INTO ALMACEN VALUES (6,49, 'COSMOPOL','MEXICO','COACALCO');
+
+select * from ALMACEN;
+
+
+INSERT INTO CAJERO VALUES (1,'JUAN', 'CAMPOS','MARTINEZ',12000);
+INSERT INTO CAJERO VALUES (2,'PETRA', 'PEREZ','LOPEZ',9500);
+INSERT INTO CAJERO VALUES (3,'PANCRACIO', 'VARGAS','GONZALEZ',8900);
+INSERT INTO CAJERO VALUES (4,'ROQUE', 'DALTO','VILLAGRAN',11500);
+INSERT INTO CAJERO VALUES (5,'EDUARDO', 'GALEANO','PEREZ',12000);
+INSERT INTO CAJERO VALUES (6,'SANDRA', 'GOMEZ','ENRIQUEZ',13200);
+
+--procedimiento
+CREATE OR REPLACE PROCEDURE PRO_ACTUALIZAR_PRODUCTO
+(
+MY_ID_PRODUCTO IN INTEGER,
+MY_PRECIO IN FLOAT
+)
+AS
+BEGIN
+UPDATE PRODUCTO SET PRECIO = MY_PRECIO WHERE ID_PRODUCTO = MY_ID_PRODUCTO;
+end;
+/
+
+CREATE OR REPLACE TRIGGER DISPARADOR_PRODUCTO BEFORE UPDATE ON PRODUCTO
+FOR EACH ROW
+BEGIN
+IF :NEW.PRECIO<:OLD.PRECIO THEN
+RAISE_APPLICATION_ERROR(-20001, 'NO PUEDES INTRODUCIR COSTOS MENORES Q EL ANTERIOR ');
+END IF;
+END;
+/
+
+
+
+
+BEGIN
+PRO_ACTUALIZAR_PRODUCTO(12,31);
+END;
+/
+
+SELECT * FROM PRODUCTO; 
+
+##############################################################################################
+--------------->Perfil_usuario
+
+
+
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.jc.model;
+
+/**
+ *
+ * @author T-201
+ */
+public class Perfil_usuario {
+    private Integer id_empleado;
+    private String Nombre;
+    private String Cargo;
+    private String Turno; 
+
+    public Perfil_usuario(Integer id_empleado, String Nombre, String Cargo, String Turno) {
+        this.id_empleado = id_empleado;
+        this.Nombre = Nombre;
+        this.Cargo = Cargo;
+        this.Turno = Turno;
+    }
+
+
+    public Integer getId_empleado() {
+        return id_empleado;
+    }
+
+    public void setId_empleado(Integer id_empleado) {
+        this.id_empleado = id_empleado;
+    }
+
+    public String getNombre() {
+        return Nombre;
+    }
+
+    public void setNombre(String Nombre) {
+        this.Nombre = Nombre;
+    }
+
+    public String getCargo() {
+        return Cargo;
+    }
+
+    public void setCargo(String Cargo) {
+        this.Cargo = Cargo;
+    }
+
+    public String getTurno() {
+        return Turno;
+    }
+
+    public void setTurno(String Turno) {
+        this.Turno = Turno;
+    }
+}
+
+###################################################################################
+-------->PersistenciaPerfil_usuario
+
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.jc.model;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import org.codehaus.jackson.map.ObjectMapper;
+
+/**
+ *
+ * @author T-201
+ */
+public class PersistenciaPerfil_usuario {
+    public static String buscarTodosLosUsuarios() throws Exception{
+       //Primero. Nos conectamos a Oracle
+     Connection con=Conexion.conectarse();
+     //Segundo. Generamos un statement de sql con la conexion anterior
+     Statement st=con.createStatement();
+     //Tercero. Llevamos a cabo la consulta (select * from producto)
+    ResultSet res=st.executeQuery("select * from Perfil_usuario");
+    int indice=0;
+    ArrayList<Perfil_usuario> productos=new ArrayList<Perfil_usuario>();
+    
+    while(res.next()){
+             Integer id_empleado=res.getInt(1);
+             String Nombre=res.getString(2);
+             String Cargo=res.getString(3);
+             String Turno= res.getString(4);
+             
+        //llenamos el ArrayList en cada vuelta
+        productos.add(new Perfil_usuario(id_empleado, 
+                Nombre, Cargo, Turno));
+        
+   
+        
+    }
+    
+    //El paso final, transformamo a objeto json con jackson
+    ObjectMapper maper=new ObjectMapper();
+
+     st.close();
+     con.close();
+     return maper.writeValueAsString(productos); 
+   }
+    
+}
+
