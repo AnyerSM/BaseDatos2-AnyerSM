@@ -1,0 +1,44 @@
+create table trabajador(
+id_trabajador integer,
+nombre varchar2(20),
+tiempo_laborando integer,
+sueldo_base float,
+constraint pk_id_trabajador primary key (id_trabajador));
+
+create table nomina(
+id_nomina integer,
+id_trabajador integer,
+horas_laboradas integer,
+sueldo float,
+constraint pk_id_nomina primary key (id_nomina),
+constraint fk_id_trabajador foreign key(id_trabajador) references trabajador(id_trabajador)); 
+--insertar el siguiente trabajador--1--Juan--7--7000--1--no poner sueldo ni horas laboradas
+--generar un disparaador para el update que se dispare cuando se asigne 16 hrs una catidad especifica de horas laboradas su logica debe ser la siguiente: 
+--debe de asignar automaticamente el campo saldo igual al producto de las horas laboradas proporcionadas por el update --por el sueldo base de dicho
+--trabajador nota no usar procedimiento para esta logica usa solo el disparador para comprobar que estas bienn has un select y el saldo ya debe estar asignado
+SELECT * FROM trabajador;
+SELECT * FROM nomina;
+
+INSERT INTO trabajador VALUES (1, 'Juan', 7, 7000);
+INSERT INTO nomina(ID_NOMINA, ID_TRABAJADOR) VALUES (1, 1);
+--GENERAR UN DISPARADOR PARA EL UPDATE QUE SE DISPARE CUANDO SE AJUSTE UN SALDO QUE TENGA LA SIGUIENTE LOGICA
+--AL EFECTUAR EL UPDATE DEBE RESTAR EL SALDO PROPORCIONADO EN EL UPDATE, AL SALDO QUE YA TENIA ANTERIORMENTE
+--DICHO CAMPO, SI EL RESULTADO DE LA OPERCACION ES MENOR QUE 0 DEBE LANZAR UNA EXCEPCION Q INDIQUE 
+--"LO SIENTO NO TIENES FONDOS SUFICICENTES Y NO DEBE EFECTUARSE DICHO UPDATE" CON EL FIN DE EVITAR SALDOS NEGATIVOS
+
+
+--after no valida solo automatizas
+-- y before valida checa logica
+CREATE OR REPLACE TRIGGER DISPARADOR_nomina AFTER UPDATE ON nomina
+FOR EACH ROW
+BEGIN
+NEW.HORAS_LABORADAS=:16
+END;
+/
+--actualizar
+BEGIN
+PRO_ACTUALIZAR_Peril(1,'Vespertino');
+END;
+/
+SELECT * FROM Perfil_usuario;
+
